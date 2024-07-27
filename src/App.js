@@ -9,8 +9,14 @@ function App() {
   const [flaglist,setflaglist]=useState([])
 
    async function getclountryflag(){
+     try {
       const response = await axios.get('https://xcountries-backend.azurewebsites.net/all')
       setflaglist(response.data)
+     } catch (error) {
+      console.error(`Error fetching data:${error}`)
+      setflaglist([])
+     }
+     
     }
     
 
