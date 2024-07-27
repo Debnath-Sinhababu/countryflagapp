@@ -1,23 +1,38 @@
+import React from 'react';
+import { useState,useEffect } from 'react';
 import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+
+  const [flaglist,setflaglist]=useState([])
+
+   async function getclountryflag(){
+      const response = await axios.get('https://xcountries-backend.azurewebsites.net/all')
+      setflaglist(response.data)
+    }
+    
+
+  useEffect(()=>{
+   getclountryflag(flaglist)
+  },[])
+
+  console.log(flaglist)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center', alignItems:'center'}}>
+      {
+        flaglist?.map((obj)=>{
+          return(
+            <div style={{width:'300px',margin:'30px'}}>
+             <img src={obj.flag} alt={obj.name} style={{objectFit:'contain'}}/>
+             <p>{obj.name}</p>
+            </div>
+          )
+        })
+      }
+      </div>
     </div>
   );
 }
