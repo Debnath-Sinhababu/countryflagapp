@@ -6,39 +6,47 @@ import './App.css';
 
 function App() {
 
-  const [flaglist,setflaglist]=useState([])
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
-   async function getclountryflag(){
-     try {
-      const response = await axios.get('https://xcountries-backend.azurewebsites.net/all')
-      setflaglist(response.data)
-     } catch (error) {
-      console.error(`Error fetching data:${error}`)
-      setflaglist([])
-     }
-     
-    }
-    
+  useEffect(() => {
+      let interval = null;
+      if (isRunning) {
+          interval = setInterval(() => {
+              setTime(prevTime => prevTime + 1);
+          }, 1000);
+      } else if (!isRunning && time !== 0) {
+          clearInterval(interval);
+      }
+      return () => clearInterval(interval);
+  }, [isRunning, time]);
 
-  useEffect(()=>{
-   getclountryflag(flaglist)
-  },[])
+  const handleStartStop = () => {
+      setIsRunning(!isRunning);
+  };
 
-  console.log(flaglist)
+  const handleReset = () => {
+      setIsRunning(false);
+      setTime(0);
+  };
+
+  const formatTime = (time) => {
+      const minutes = String(Math.floor(time / 60));
+      const seconds = String(time % 60).padStart(2, '0');
+      return `${minutes}:${seconds}`;
+  };
+
+ 
   return (
     <div className="App">
-      <div style={{display:'flex',flexWrap:'wrap',justifyContent:'center', alignItems:'center'}}>
-      {
-        flaglist?.map((obj)=>{
-          return(
-            <div style={{width:'300px',margin:'30px'}}>
-             <img src={obj.flag} alt={obj.name} style={{objectFit:'contain'}}/>
-             <p>{obj.name}</p>
+      <div className="stopwatch">
+            <h3>Stopwatch</h3>
+            <div className="display">Time:{formatTime(time)}</div>
+            <div className="buttons">
+                <button onClick={handleStartStop}>{isRunning ? 'Stop' : 'Start'}</button>
+                <button onClick={handleReset}>Reset</button>
             </div>
-          )
-        })
-      }
-      </div>
+        </div>
     </div>
   );
 }
