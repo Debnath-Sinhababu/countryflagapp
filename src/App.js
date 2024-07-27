@@ -6,47 +6,32 @@ import './App.css';
 
 function App() {
 
-  const [time, setTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+   const [firstname,setfirstname]=useState('')
+   const [lastname,setlastname]=useState('')
+   const [fullname,setfullname]=useState('')
+   function getfullname(e){
+    e.preventDefault()
+    setfullname(`Full Name: ${firstname} ${lastname}`)
 
-  useEffect(() => {
-      let interval = null;
-      if (isRunning) {
-          interval = setInterval(() => {
-              setTime(prevTime => prevTime + 1);
-          }, 1000);
-      } else if (!isRunning && time !== 0) {
-          clearInterval(interval);
-      }
-      return () => clearInterval(interval);
-  }, [isRunning, time]);
-
-  const handleStartStop = () => {
-      setIsRunning(!isRunning);
-  };
-
-  const handleReset = () => {
-      setIsRunning(false);
-      setTime(0);
-  };
-
-  const formatTime = (time) => {
-      const minutes = String(Math.floor(time / 60));
-      const seconds = String(time % 60).padStart(2, '0');
-      return `${minutes}:${seconds}`;
-  };
-
- 
+   }
   return (
     <div className="App">
-      <div className="stopwatch">
-            <h3>Stopwatch</h3>
-            <div className="display">Time: {formatTime(time)}</div>
-            <div className="buttons">
-                <button onClick={handleStartStop}>{isRunning ? 'Stop' : 'Start'}</button>
-                <button onClick={handleReset}>Reset</button>
+       <h1>Full Name Display</h1>
+
+        <form onSubmit={(e)=>getfullname(e)}>
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" required value={firstname} onChange={(e)=>setfirstname(e.target.value)}/>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" required value={lastname} onChange={(e)=>setlastname(e.target.value)}/>
+            </div>
+            <button type="submit">Submit</button>
+            {
+              fullname && <p>{fullname}</p>
+            }
+        </form>
     </div>
   );
 }
