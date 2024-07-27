@@ -5,56 +5,39 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-  const [input, setInput] = useState('');
-  const [result,setresult]=useState(null)
-  const handleClick = (value) => {
-    setInput((prev) => prev + value);
-  };
-
-  const handleClear = () => {
-    setInput('');
-    setresult(null)
-  };
-
-  const handleEvaluate = () => {
-    try {
-      if(input=='0/0'){
-        setresult('NaN');
-        return
-      }
-      if(!input){
-        setresult('Error');
-        return
-      }
-      setresult(eval(input));
-    } catch(e) {
-      setresult('Error');
-    }
-  };
+ 
+  const [username,setusername]=useState('')
+  const [password,setpassword]=useState('')
+  const [loginsuccess,isloginsuccess]=useState(null)
+  function login(e){
+     e.preventDefault()
+     if(username=='user' && password=='password'){
+      isloginsuccess(true)
+     } else{
+      isloginsuccess(false)
+     }
+  }
   
   return (
-    <div className="calculator App">
-      <h1>React Calculator</h1>
-      <input type="text" value={input} readOnly />
-      <div style={{margin:20, fontSize: '1.5em'}}>{result && result}</div>
-      <div className="buttons">
-        <button onClick={() => handleClick('7')}>7</button>
-        <button onClick={() => handleClick('8')}>8</button>
-        <button onClick={() => handleClick('9')}>9</button>
-        <button onClick={() => handleClick('+')}>+</button>
-        <button onClick={() => handleClick('4')}>4</button>
-        <button onClick={() => handleClick('5')}>5</button>
-        <button onClick={() => handleClick('6')}>6</button>
-        <button onClick={() => handleClick('-')}>-</button>
-        <button onClick={() => handleClick('1')}>1</button>
-        <button onClick={() => handleClick('2')}>2</button>
-        <button onClick={() => handleClick('3')}>3</button>
-        <button onClick={() => handleClick('*')}>*</button>
-        <button onClick={handleClear}>C</button>
-        <button onClick={() => handleClick('0')}>0</button>
-        <button onClick={handleEvaluate}>=</button>
-        <button onClick={() => handleClick('/')}>/</button>
-      </div>
+    <div className="App">
+      
+      <h1>Login Page</h1>
+      {loginsuccess==false && <p>Invalid username or password</p>}
+      {
+        loginsuccess?<p>Welcome user!</p>:
+      
+        <form action="/submit-login" method="post" onSubmit={(e)=>login(e)}>
+          <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder='username' required value={username} onChange={(e)=>setusername(e.target.value)}/>
+            </div>
+            <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder='password' required  onChange={(e)=>setpassword(e.target.value)}/>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+}
     </div>
   );
 }
