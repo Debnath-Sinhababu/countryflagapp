@@ -24,7 +24,7 @@ function App() {
       <h1>Login Page</h1>
       {loginsuccess==false && <p>Invalid username or password</p>}
       {
-        loginsuccess?<p>Welcome user!</p>:
+        loginsuccess?<p>Welcome, user!</p>:
       
         <form action="/submit-login" method="post" onSubmit={(e)=>login(e)}>
           <div>
