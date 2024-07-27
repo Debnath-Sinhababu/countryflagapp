@@ -14,8 +14,14 @@ function App() {
  const [selectedcity, setselectedcity]=useState(null)
  
  async function getcountry(){
+  try {
     let result=await axios.get('https://crio-location-selector.onrender.com/countries')
     setcountry(result.data)
+  } catch (error) {
+    console.log(error)
+    setcountry([])
+  }
+   
    
  }
 
@@ -25,8 +31,15 @@ async function getstates(){
 }
 
 async function getcity(){
-  let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/state=${selectedstate}/cities`)
-  setcity(result.data)
+  try {
+    let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/state=${selectedstate}/cities`)
+    setcity(result.data)
+  } catch (error) {
+    console.log(error)
+
+  }
+  
+ 
 }
 
  useEffect(()=>{
