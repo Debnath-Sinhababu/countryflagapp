@@ -5,113 +5,46 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
- 
- const [country, setcountry]=useState([])
- const [state, setstate]=useState([])
- const [city, setcity]=useState([])
- const [selectedcountry, setselectedcountry]=useState(null)
- const [selectedstate, setselectedstate]=useState(null)
- const [selectedcity, setselectedcity]=useState(null)
- 
+ const [countries,setcountries]=useState([])
+  
  async function getcountry(){
   try {
-    let result=await axios.get('https://crio-location-selector.onrender.com/countries')
-    setcountry(result.data)
+    let result = await axios.get(`https://restcountries.com/v3.1/all`)
+  setcountries(result.data)
   } catch (error) {
-    console.log(error)
-    setcountry([])
+    console.error(error)
+    setcountries([])
   }
-   
-   
+  
  }
 
-async function getstates(){
-  let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/states`)
-  setstate(result.data)
-}
-
-async function getcity(){
-  try {
-    let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/state=${selectedstate}/cities`)
-    setcity(result.data)
-  } catch (error) {
-    console.log(error)
-
-  }
-  
- 
-}
-
  useEffect(()=>{
-  getcountry()
-   
+   getcountry()
  },[])
-
- useEffect(()=>{
-  if(selectedcountry){
-  getstates()
-  }
- },[selectedcountry])
-
- useEffect(()=>{
-  if(selectedstate){
-  getcity()
-  }
- },[selectedstate])
-  
   return (
     <div className="App">
-      <h2>Select Location</h2>
-      <div>
-      <select id="dropdown" name="options" required onChange={(e)=>{
-           if(e.target.value!='select country'){
-            setselectedcountry(e.target.value)
-           }
-      }}>
-                <option value="select country">Select Country</option>
-                {
-                  country.map((val)=>{
-                    return(
-                      <option value={val}>{val}</option>
-                    )
-                  })
-                }
-            </select>
-            <select id="dropdown" name="options" required disabled={selectedcountry?false:true} onChange={(e)=>{
-           if(e.target.value){
-            setselectedstate(e.target.value)
-           }
-      }}>
-                <option value="">Select State</option>
-                {
-                  state.map((val)=>{
-                    return(
-                      <option value={val}>{val}</option>
-                    )
-                  })
-                }   
-            </select>
-
-            <select id="dropdown" name="options" required disabled={selectedstate?false:true} onChange={(e)=>{
-           if(e.target.value){
-            setselectedcity(e.target.value)
-
-           }
-           
-           }}>
-                <option value="">Select City</option>   
-                {
-                  city.map((val)=>{
-                    return(
-                      <option value={val}>{val}</option>
-                    )
-                  })
-                }   
-            </select>
-          {
-            selectedcity && <p>You selected {selectedcity}, {selectedstate}, {selectedcountry}</p>
-          }
+     <input type="text" name="" id="" onChange={(e)=>{
+       if(e.target.value){
+       let filteredcountry=countries.filter((obj)=>{
+           return obj.name.common.toLowerCase().includes(e.target.value.toLowerCase())
+  
+       })
+       setcountries(filteredcountry)
+      } else{
+        getcountry()
+      }
+     }}/>
+      <div style={{display:'flex', justifyContent:'center', flexWrap:'wrap'}}>
+        {
+          countries.map((obj)=>(
+            <div style={{width:'300px', margin:30, height:'300px'}} className='countryCard'>
+            <img src={obj.flags.png} alt={obj.name.common}/>
+            <p>{obj.name.common}</p>
             </div>
+          ))
+        }
+    
+      </div>
     </div>
   );
 }
