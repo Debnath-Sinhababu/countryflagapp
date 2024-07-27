@@ -5,46 +5,20 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
- const [countries,setcountries]=useState([])
-  
- async function getcountry(){
-  try {
-    let result = await axios.get(`https://restcountries.com/v3.1/all`)
-  setcountries(result.data)
-  } catch (error) {
-    console.error(error)
-    setcountries([])
-  }
-  
- }
-
- useEffect(()=>{
-   getcountry()
- },[])
+ 
+  const [count,setcount]=useState(0)
   return (
     <div className="App">
-     <input type="text" name="" id="" onChange={(e)=>{
-       if(e.target.value){
-       let filteredcountry=countries.filter((obj)=>{
-           return obj.name.common.toLowerCase().includes(e.target.value.toLowerCase())
-  
-       })
-       setcountries(filteredcountry)
-      } else{
-        getcountry()
-      }
-     }}/>
-      <div style={{display:'flex', justifyContent:'center', flexWrap:'wrap'}}>
-        {
-          countries.map((obj)=>(
-            <div style={{width:'300px', margin:30, height:'300px'}} className='countryCard'>
-            <img src={obj.flags.png} alt={obj.name.common}/>
-            <p>{obj.name.common}</p>
-            </div>
-          ))
-        }
-    
-      </div>
+      <h3>Counter App</h3> 
+      <p>Count: {count}</p> 
+      <div style={{display:'flex',justifyContent:'center'}}>
+        <button onClick={()=>{
+          setcount((prev)=>prev+1)
+        }}>Increment</button>
+        <button onClick={()=>{
+          setcount((prev)=>prev-1)
+        }}>Decrement</button>
+        </div>  
     </div>
   );
 }
