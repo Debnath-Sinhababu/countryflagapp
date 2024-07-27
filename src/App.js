@@ -6,38 +6,99 @@ import './App.css';
 
 function App() {
  
-  const [username,setusername]=useState('')
-  const [password,setpassword]=useState('')
-  const [loginsuccess,isloginsuccess]=useState(null)
-  function login(e){
-     e.preventDefault()
-     if(username=='user' && password=='password'){
-      isloginsuccess(true)
-     } else{
-      isloginsuccess(false)
-     }
+ const [country, setcountry]=useState([])
+ const [state, setstate]=useState([])
+ const [city, setcity]=useState([])
+ const [selectedcountry, setselectedcountry]=useState(null)
+ const [selectedstate, setselectedstate]=useState(null)
+ const [selectedcity, setselectedcity]=useState(null)
+ 
+ async function getcountry(){
+    let result=await axios.get('https://crio-location-selector.onrender.com/countries')
+    setcountry(result.data)
+   
+ }
+
+async function getstates(){
+  let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/states`)
+  setstate(result.data)
+}
+
+async function getcity(){
+  let result=await axios.get(`https://crio-location-selector.onrender.com/country=${selectedcountry}/state=${selectedstate}/cities`)
+  setcity(result.data)
+}
+
+ useEffect(()=>{
+  getcountry()
+   
+ },[])
+
+ useEffect(()=>{
+  if(selectedcountry){
+  getstates()
   }
+ },[selectedcountry])
+
+ useEffect(()=>{
+  if(selectedstate){
+  getcity()
+  }
+ },[selectedstate])
   
   return (
     <div className="App">
-      
-      <h1>Login Page</h1>
-      {loginsuccess==false && <p>Invalid username or password</p>}
-      {
-        loginsuccess?<p>Welcome, user!</p>:
-      
-        <form action="/submit-login" method="post" onSubmit={(e)=>login(e)}>
-          <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" placeholder='username' required value={username} onChange={(e)=>setusername(e.target.value)}/>
+      <h2>Select Location</h2>
+      <div>
+      <select id="dropdown" name="options" required onChange={(e)=>{
+           if(e.target.value!='select country'){
+            setselectedcountry(e.target.value)
+           }
+      }}>
+                <option value="select country">Select Country</option>
+                {
+                  country.map((val)=>{
+                    return(
+                      <option value={val}>{val}</option>
+                    )
+                  })
+                }
+            </select>
+            <select id="dropdown" name="options" required disabled={selectedcountry?false:true} onChange={(e)=>{
+           if(e.target.value){
+            setselectedstate(e.target.value)
+           }
+      }}>
+                <option value="">Select State</option>
+                {
+                  state.map((val)=>{
+                    return(
+                      <option value={val}>{val}</option>
+                    )
+                  })
+                }   
+            </select>
+
+            <select id="dropdown" name="options" required disabled={selectedstate?false:true} onChange={(e)=>{
+           if(e.target.value){
+            setselectedcity(e.target.value)
+
+           }
+           
+           }}>
+                <option value="">Select City</option>   
+                {
+                  city.map((val)=>{
+                    return(
+                      <option value={val}>{val}</option>
+                    )
+                  })
+                }   
+            </select>
+          {
+            selectedcity && <p>You selected {selectedcity}, {selectedstate}, {selectedcountry}</p>
+          }
             </div>
-            <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder='password' required  onChange={(e)=>setpassword(e.target.value)}/>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-}
     </div>
   );
 }
