@@ -6,60 +6,42 @@ import './App.css';
 
 function App() {
 
-  const customDictionary = {
-    teh: "the",
-    wrok: "work",
-    fot: "for",
-    exampl: "example",
-  };
-  
-  const SpellCheckApp = () => {
-    const [inputText, setInputText] = useState("");
-    const [suggestedText, setSuggestedText] = useState("");
-  
-    const handleInputChange = (e) => {
-      const text = e.target.value;
-      setInputText(text);
-  
-      // Implement a basic spelling check and correction
-      const words = text.split(" ");
-      const correctedWords = words.map((word) => {
-        const correctedWord = customDictionary[word.toLowerCase()];
-        return correctedWord || word;
-      });
-  
-      const correctedText = correctedWords.join(" ");
-  
-      // Set the suggested text (first corrected word)
-      const firstCorrection = correctedWords.find(
-        (word, index) => word !== words[index]
-      );
-      setSuggestedText(firstCorrection || "");
-    };
-  
-    return (
-      <div>
-        <h1>Spell Check and Auto-Correction</h1>
-        <textarea
-          value={inputText}
-          onChange={handleInputChange}
-          placeholder="Enter text..."
-          rows={5}
-          cols={40}
-        />
-        {suggestedText && (
-          <p>
-            Did you mean: <strong>{suggestedText}</strong>?
-          </p>
-        )}
-      </div>
-    );
-  };
+  const [inputval, setinputval]=useState('')
+  const [defination, setdefination]=useState('')
+
+ let dictionary= [
+
+    { word: "React", meaning: "A JavaScript library for building user interfaces." },
+
+    { word: "Component", meaning: "A reusable building block in React." },
+
+    { word: "State", meaning: "An object that stores data for a component." }
+
+]
+
+  function getindictionary(){
+  let filteredval=  dictionary.filter((obj)=>{
+     
+    return obj.word.toLowerCase()==inputval.toLowerCase()
+         
+    })
+    if(filteredval.length){
+      setdefination(filteredval[0].meaning)
+    } else{
+      setdefination('Word not found in the dictionary.')
+    }
+  }
   
   
   return (
     <div className="App">
-   <SpellCheckApp/>
+    <h2>Dictionary App</h2>
+    <div>
+    <input type="text" value={inputval} onChange={(e)=>setinputval(e.target.value)}/>
+    <button onClick={getindictionary}>Search</button>
+    </div>
+    <h4>Definition:</h4>
+    {defination && <p>{defination}</p>}
     </div>
   );
 }
