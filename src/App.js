@@ -12,7 +12,7 @@ function App() {
   setloading(true)
   try {
    
-    let response=await axios.get(`http://api.weatherapi.com/v1/current.json?key=7954c4253e51438a9bb104528242807&q=${inputval}&aqi=no`)
+    let response=await axios.get(`https://api.weatherapi.com/v1/current.json?key=7954c4253e51438a9bb104528242807&q=${inputval}&aqi=no`)
     let data=response.data;
     setloading(false)
     let arr=[]
