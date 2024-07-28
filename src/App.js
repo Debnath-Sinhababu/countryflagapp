@@ -24,6 +24,7 @@ function App() {
       pagenateddata(response.data, 0)
     } catch (error) {
       console.error(error)
+      window.alert('failed to fetch data')
       settabledata([])
       pagenateddata([],0)
     }
@@ -43,12 +44,15 @@ function App() {
     <div className="App">
        <h2>Employee Data Table</h2>
     <table>
+      <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
         </tr>
+        </thead>
+        <tbody>
         {
          showdata.length && showdata?.map((obj)=>(
             <tr>
@@ -59,6 +63,7 @@ function App() {
             </tr>
           ))
         }
+        </tbody>
     </table>
     <div style={{display:'flex',justifyContent:'center', marginTop:20}}>
      <button onClick={()=>{
