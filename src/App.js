@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import './App.css'
 
 function App() {
   const [inputVal, setInputVal] = useState('');
@@ -41,3 +41,5 @@ function App() {
     </div>
   );
 }
+
+export default App
